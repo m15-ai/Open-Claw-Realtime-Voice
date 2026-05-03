@@ -1,0 +1,23 @@
+# Local config + secrets
+.env
+.config.json
+
+# Virtual environment
+.venv/
+
+# Personal biometric data — DO NOT commit
+reference_face.npy
+reference_face.jpg
+reference_face.*.bak
+
+# Legacy local-stack assets (downloaded, not source)
+piper-bin/
+voices/
+vosk-model/
+
+# Backup of pre-Deepgram server (kept locally, not shipped)
+server_local.py
+
+# Python build artifacts
+__pycache__/
+*.pyc

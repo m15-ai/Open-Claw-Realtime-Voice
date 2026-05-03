@@ -1,0 +1,21 @@
+{
+  "volume": 65,
+  "mute_mic_during_playback": true,
+  "fade_duration_ms": 70,
+  "aura_voice": "aura-asteria-en",
+  "wake_mode": "face",
+  "wake_phrase": "hey girl",
+  "user_name": "User",
+  "user_name_spoken": "",
+  "greeting": "Hello",
+  "stt_endpointing_ms": 1000,
+  "stt_keyterms": [],
+  "bot_bin": "/usr/local/bin/openclaw",
+  "bot_agent": "main",
+  "bot_cwd": "/home/user",
+  "bot_thought_level": "off",
+  "bot_timeout_secs": 120,
+  "bot_identity_path": "",
+  "workspace_docs": [],
+  "face_absence_grace_secs": 300
+}

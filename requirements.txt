@@ -1,0 +1,16 @@
+# Core voice loop
+numpy>=1.26
+websockets>=12,<14
+jack-client>=0.5
+soxr>=0.5
+
+# Cloud STT/TTS
+deepgram-sdk>=4
+httpx>=0.27
+python-dotenv>=1
+
+# Optional: face-mode wake gate.
+# These pull in dlib (compiles from source on aarch64; takes a few minutes).
+# Skip if you only need phrase-mode wake.
+# opencv-python-headless>=4.8
+# face_recognition>=1.3

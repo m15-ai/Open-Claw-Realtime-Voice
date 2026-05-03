@@ -1,6 +1,10 @@
 # Open Claw Realtime Voice
 
 <p align="center">
+  <img src="Header.jpg" alt="Open Claw Realtime Voice project summary">
+</p>
+
+<p align="center">
   <img src="Docs/server-output.png" alt="server.py output: turn-by-turn STT transcript, agent reply, perf metrics, mic-stream pause/resume gating">
   <br>
   <em>server.py Output</em>
@@ -24,20 +28,20 @@ Wake modes are pluggable: face, phrase ("hey girl"-style), or either.
 
 ```
    ┌────────────┐    PCM 16k    ┌────────────┐ ws+JSON  ┌──────────────┐
-   │  client.py │ ───────────▶ │  server.py │ ───────▶ │ Deepgram STT │
-   │  (JACK)    │ ◀─────────── │            │ ◀─────── │  (streaming) │
+   │  client.py │ ────────────> │  server.py │ ───────> │ Deepgram STT │
+   │  (JACK)    │ <──────────── │            │ <─────── │  (streaming) │
    └────────────┘   PCM 48k     │            │          └──────────────┘
-        │ │                    │            │
-        │ └──── camera ───────▶│ FaceWatcher│
+        │ │                     │            │
+        │ └──── camera ───────> │ FaceWatcher│
         │                       │            │  stdin/stdout JSON-RPC
         │                       │            │  ┌───────────────────┐
-        │                       │            │─▶│ openclaw acp      │
-        │                       │            │◀─│  (your agent)     │
+        │                       │            │─>│ openclaw acp      │
+        │                       │            │<─│  (your agent)     │
         │                       │            │  └───────────────────┘
         │                       │            │  HTTP
         │                       │            │  ┌───────────────────┐
-        ▼                       │            │─▶│ Deepgram Aura TTS │
-   speaker (USB DAC)            │            │◀─│  (linear16 48k)   │
+        v                       │            │─>│ Deepgram Aura TTS │
+   speaker (USB DAC)            │            │<─│  (linear16 48k)   │
                                 └────────────┘  └───────────────────┘
 ```
 

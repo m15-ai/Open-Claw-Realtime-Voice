@@ -1,15 +1,17 @@
 # Copyright (c) 2025 m15.ai
-# 
+#
 # License: MIT
 #
 # Description:
 #
-# This is a real-time, local voice AI system optimized to run on an 8GB Ubuntu
-# laptop with no GPU, achieving less than 1 second STT to TTS latency. It
-# leverages a WebSocket client/server architecture, utilizes Gemma3:1b via
-# Ollama for the language model, Vosk for offline speech-to-text, and Piper for
-# text-to-speech. The system also employs JACK/PipeWire for low-latency I/O.
-# The project aims for full localization with interruptions still on the roadmap.
+# Voice client process for Open Claw Realtime Voice. Handles audio I/O via
+# JACK (over PipeWire's compatibility layer): captures from the default
+# physical source, plays to the default physical sink, and streams int16
+# PCM to/from server.py over a single WebSocket. Physical capture/playback
+# ports are discovered at startup, so all-in-one mono USB devices (e.g.
+# the ROCWARE RC08) work without code changes. Mic is hard-muted during
+# TTS playback as a cheap echo suppressant in lieu of WebRTC AEC.
+# End-to-end latency on a Pi 5: ~5-8s/turn, model-bound.
 
 import asyncio
 import jack

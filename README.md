@@ -4,13 +4,13 @@
   <img src="Header.jpg" alt="Open Claw Realtime Voice project summary">
 </p>
 
+A real-time voice agent that runs on a Raspberry Pi 5 (or any Linux box). Mic in, speaker out, with a face-recognition wake gate, conversational follow-ups, and the actual brain provided by an agentic LLM with tools — not a chatbot.
+
 <p align="center">
   <img src="Docs/server-output.png" alt="server.py output: turn-by-turn STT transcript, agent reply, perf metrics, mic-stream pause/resume gating">
   <br>
   <em>server.py Output</em>
 </p>
-
-A real-time voice agent that runs on a Raspberry Pi 5 (or any Linux box). Mic in, speaker out, with a face-recognition wake gate, conversational follow-ups, and the actual brain provided by an agentic LLM with tools — not a chatbot.
 
 This is a fork of [m15-ai/Faster-Local-Voice-AI](https://github.com/m15-ai/Faster-Local-Voice-AI) with the local Vosk + Piper + Ollama pipeline swapped for **Deepgram** (streaming STT + Aura TTS) and the LLM swapped for **[OpenClaw](https://docs.openclaw.ai/)** — talking to a long-running agent via the **Agent Client Protocol (ACP)**. The ACP bridge keeps a single Node process warm across turns, which is how we get from ~14s/turn (per-call CLI) down to **~5–8s/turn** on a Pi 5.
 

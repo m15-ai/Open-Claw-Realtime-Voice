@@ -17,5 +17,6 @@
   "bot_timeout_secs": 120,
   "bot_identity_path": "",
   "workspace_docs": [],
-  "face_absence_grace_secs": 300
+  "face_absence_grace_secs": 300,
+  "wake_window_secs": 300
 }

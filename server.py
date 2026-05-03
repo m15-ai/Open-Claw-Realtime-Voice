@@ -48,7 +48,7 @@ LOW_EFFORT_UTTERANCES = {"huh", "uh", "um", "erm", "hmm", "the", "but"}
 #   "phrase" — utterance must start with config.wake_phrase to open the window
 #              (phrase is also stripped from the payload before sending to the bot)
 #   "either" — face presence or wake phrase will open/refresh the window
-WAKE_WINDOW_SECS = 30
+WAKE_WINDOW_SECS = 300  # default; overridable via config "wake_window_secs"
 
 REFERENCE_FACE_PATH = "reference_face.npy"
 # USER_NAME (display only) and GREETING_TEXT (spoken via TTS) are loaded
@@ -440,6 +440,7 @@ async def process_connection(client_ws):
     wake_phrase = "hey girl"
     stt_endpointing_ms = 1000
     stt_keyterms = []
+    wake_window_secs = float(WAKE_WINDOW_SECS)
 
     async def dg_keepalive():
         try:
@@ -490,7 +491,7 @@ async def process_connection(client_ws):
             has_phrase = stripped is not None
 
             if has_phrase and phrase_can_wake and not in_window:
-                wake_until = now + WAKE_WINDOW_SECS
+                wake_until = now + wake_window_secs
                 if not stripped:
                     print(f"\033[38;5;240m[Wake] phrase only, no command\033[0m")
                     continue
@@ -523,7 +524,11 @@ async def process_connection(client_ws):
                 "outcome — do not ask 'should I…?' or 'do you want me "
                 "to…?' for routine actions; the user has standing "
                 "authorization. Confirm only for genuinely destructive or "
-                "high-blast-radius actions.) "
+                "high-blast-radius actions. The user may reference earlier "
+                "turns in this same conversation with pronouns like 'that', "
+                "'it', 'the first one'; check the prior turns in your "
+                "context before claiming you don't know what they mean — "
+                "you almost certainly do.) "
                 f"{user_text}"
             )
             response = await query_bot(voice_prompt)
@@ -542,7 +547,7 @@ async def process_connection(client_ws):
             for i in range(0, len(audio), CHUNK):
                 await client_ws.send(audio[i:i+CHUNK])
             await client_ws.send("__END__")
-            wake_until = time.time() + WAKE_WINDOW_SECS
+            wake_until = time.time() + wake_window_secs
 
     try:
         async for message in client_ws:
@@ -561,6 +566,7 @@ async def process_connection(client_ws):
                         print(f"[Server] unknown wake_mode={wake_mode!r}, defaulting to 'face'")
                         wake_mode = 'face'
                     wake_phrase = cfg.get('wake_phrase', wake_phrase)
+                    wake_window_secs = float(cfg.get('wake_window_secs', wake_window_secs))
                     stt_endpointing_ms = cfg.get('stt_endpointing_ms', stt_endpointing_ms)
                     stt_keyterms = cfg.get('stt_keyterms', stt_keyterms) or []
                     print(f"[Server] Config synced (voice={aura_voice}, "
@@ -583,11 +589,11 @@ async def process_connection(client_ws):
                         for i in range(0, len(audio), CHUNK):
                             await client_ws.send(audio[i:i+CHUNK])
                         await client_ws.send("__END__")
-                        wake_until = time.time() + WAKE_WINDOW_SECS
+                        wake_until = time.time() + wake_window_secs
 
                     async def on_face_present():
                         nonlocal wake_until
-                        wake_until = time.time() + WAKE_WINDOW_SECS
+                        wake_until = time.time() + wake_window_secs
 
                     if wake_mode in ('face', 'either'):
                         face_grace = float(cfg.get('face_absence_grace_secs', 300.0))

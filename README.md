@@ -1,4 +1,4 @@
-# Faster Local Voice AI — OpenClaw Edition
+# Open Claw Realtime Voice
 
 A real-time voice agent that runs on a Raspberry Pi 5 (or any Linux box). Mic in, speaker out, with a face-recognition wake gate, conversational follow-ups, and the actual brain provided by an agentic LLM with tools — not a chatbot.
 
@@ -93,7 +93,8 @@ Copy `config.json` → `.config.json` (the loader looks at the dotfile) and edit
   "bot_timeout_secs": 120,
   "bot_identity_path": "",
   "workspace_docs": [],
-  "face_absence_grace_secs": 300
+  "face_absence_grace_secs": 300,
+  "wake_window_secs": 300
 }
 ```
 
@@ -111,6 +112,7 @@ Copy `config.json` → `.config.json` (the loader looks at the dotfile) and edit
 | `wake_mode` | `"face"` (face watcher only), `"phrase"` (utterance must start with `wake_phrase`), or `"either"` |
 | `wake_phrase` | Spoken trigger when `wake_mode` includes phrase |
 | `face_absence_grace_secs` | How long the face must be missing before the session times out. Default 300s — brief head-turns or hand-blocks won't kick you out. |
+| `wake_window_secs` | How long the wake window stays open after the last face match or turn. Audio streams to Deepgram only while this window is open in face-only mode (see Cost gate below). Default 300s. |
 
 > **Cost gate:** in `wake_mode = "face"` only, the server stops forwarding mic bytes to Deepgram once the wake window closes (audio doesn't open the window in face-only mode — only the camera does). The Deepgram STT WebSocket is kept alive via the existing keepalive task and resumes instantly when you return. In `phrase` or `either` modes, audio must keep streaming so the wake phrase can still be heard, so this gate doesn't apply.
 

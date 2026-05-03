@@ -1,5 +1,11 @@
 # Open Claw Realtime Voice
 
+<p align="center">
+  <img src="Docs/server-output.png" alt="server.py output: turn-by-turn STT transcript, agent reply, perf metrics, mic-stream pause/resume gating">
+  <br>
+  <em>server.py Output</em>
+</p>
+
 A real-time voice agent that runs on a Raspberry Pi 5 (or any Linux box). Mic in, speaker out, with a face-recognition wake gate, conversational follow-ups, and the actual brain provided by an agentic LLM with tools — not a chatbot.
 
 This is a fork of [m15-ai/Faster-Local-Voice-AI](https://github.com/m15-ai/Faster-Local-Voice-AI) with the local Vosk + Piper + Ollama pipeline swapped for **Deepgram** (streaming STT + Aura TTS) and the LLM swapped for **[OpenClaw](https://docs.openclaw.ai/)** — talking to a long-running agent via the **Agent Client Protocol (ACP)**. The ACP bridge keeps a single Node process warm across turns, which is how we get from ~14s/turn (per-call CLI) down to **~5–8s/turn** on a Pi 5.
@@ -47,13 +53,21 @@ Wake modes are pluggable: face, phrase ("hey girl"-style), or either.
 - **Deepgram** account (you'll need an API key — free tier works)
 - **[OpenClaw](https://docs.openclaw.ai/)** installed and a working agent (this fork assumes the agent ID is `main`; configurable)
 - **System packages**: `pipewire-jack`, `sox`, `pactl` (PulseAudio CLI)
-- **USB mic + speaker + (optional) USB webcam** — see audio routing below
+- **USB mic + speaker + USB webcam** — three separate devices, or a single 3-in-1 unit (see [Hardware](#hardware) below). Webcam optional if you only want phrase-mode wake.
+
+## Hardware
+
+You can wire this up with three independent USB devices (mic, speaker, camera) — anything PipeWire enumerates and any UVC webcam will work. We've also tested it with all-in-one units, which simplifies cabling and audio routing.
+
+**Tested all-in-one (recommended):** [ROCWARE RC08](https://www.amazon.com/ROCWARE-Rocware-RC08-Streaming-Recording/dp/B09TKCNP96/) — single USB cable, integrated camera + speaker + sensitive omnidirectional mic. Works out of the box on Pi 5 with PipeWire: enumerates as a UVC webcam (`/dev/video0`) plus a mono USB audio device that PipeWire auto-claims as both default source and default sink. The mono device shape is handled transparently by `client.py`'s dynamic JACK port discovery — no code changes needed.
+
+Any equivalent 3-in-1 USB conferencing device should work the same way; the design is hardware-agnostic.
 
 ## Install
 
 ```bash
-git clone https://github.com/<you>/Faster-Local-Voice-AI.git
-cd Faster-Local-Voice-AI
+git clone https://github.com/m15-ai/Open-Claw-Realtime-Voice.git
+cd Open-Claw-Realtime-Voice
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 # face recognition (skip if you only want phrase mode):

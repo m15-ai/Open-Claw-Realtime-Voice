@@ -27,6 +27,9 @@ Wake modes are pluggable: face, phrase ("hey girl"-style), or either.
 ## Architecture
 
 ```
+   mic (USB)
+        │
+        v
    ┌────────────┐    PCM 16k    ┌────────────┐ ws+JSON  ┌──────────────┐
    │  client.py │ ────────────> │  server.py │ ───────> │ Deepgram STT │
    │  (JACK)    │ <──────────── │            │ <─────── │  (streaming) │
